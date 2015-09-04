@@ -17,27 +17,29 @@ var {
 } = React;
 
 var HTMLToPDFExample = React.createClass({
+  
   componentDidMount() {
     var options = {
       html: '<h1>PDF TEST</h1>',
       fileName: 'test'
     };
-    HTMLtoPDF.convert(options).then((result) => {
-      Mailer.mail({
+    
+  HTMLtoPDF.convert(options).then((result) => {
+    Mailer.mail({
         subject: '',
         recipients: [''],
         body: '',
         attachmentPath: result,
         attachmentType: 'pdf',
       }, (error, event) => {
-          if(error) {
-            AlertIOS.alert('Error', 'Could not send mail. Please send a mail to support@example.com');
-          }
+        if(error) {
+          AlertIOS.alert('Error', 'Could not send mail. Please send a mail to support@example.com');
+        }
       });
     });
   },
 
-  render: function() {
+  render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
