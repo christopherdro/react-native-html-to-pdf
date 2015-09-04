@@ -59,32 +59,31 @@ RCT_EXPORT_MODULE();
     return self;
 }
 
-RCT_EXPORT_METHOD(HTMLToPDF:(NSDictionary *)options
+RCT_EXPORT_METHOD(convert:(NSDictionary *)options
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     
-    NSString *html;
-    NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString];
-
     if (options[@"html"]){
         _html = [RCTConvert NSString:options[@"html"]];
     }
     
     if (options[@"fileName"]){
         _fileName = [RCTConvert NSString:options[@"fileName"]];
+    } else {
+        _fileName = [[NSProcessInfo processInfo] globallyUniqueString];
     }
     
     if (options[@"directory"] && [options[@"directory"] isEqualToString:@"docs"]){
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsPath = [paths objectAtIndex:0];
-       
-        _filePath = [NSString stringWithFormat:@"%@%@.pdf", documentsPath, guid];
-
+        
+        _filePath = [NSString stringWithFormat:@"%@/%@.pdf", documentsPath, _fileName];
+        
     } else {
-        _filePath = [NSString stringWithFormat:@"%@%@.pdf", NSTemporaryDirectory(), guid];
+        _filePath = [NSString stringWithFormat:@"%@%@.pdf", NSTemporaryDirectory(), _fileName];
     }
     
-    [_webView loadHTMLString:html baseURL:nil];
+    [_webView loadHTMLString:_html baseURL:nil];
     
     _resolveBlock = resolve;
     _rejectBlock = reject;
@@ -109,7 +108,7 @@ RCT_EXPORT_METHOD(HTMLToPDF:(NSDictionary *)options
     
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
     [render setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
-
+    
     NSData *pdfData = [render printToPDF];
     
     if (pdfData) {
