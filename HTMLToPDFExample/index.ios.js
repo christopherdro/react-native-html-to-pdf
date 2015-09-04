@@ -5,12 +5,14 @@
 'use strict';
 
 var React = require('react-native');
-var HTMLtoPDF = require('NativeModules').RNHTMLtoPDF;
-var Mailer = require('NativeModules').RNMail;
 
 var {
   AlertIOS,
   AppRegistry,
+  NativeModules: {
+    RNHTMLtoPDF,
+    RNMail
+  }
   StyleSheet,
   Text,
   View,
@@ -24,8 +26,8 @@ var HTMLToPDFExample = React.createClass({
       fileName: 'test'
     };
     
-  HTMLtoPDF.convert(options).then((result) => {
-    Mailer.mail({
+  RNHTMLtoPDF.convert(options).then((result) => {
+    RNMail.mail({
         subject: '',
         recipients: [''],
         body: '',

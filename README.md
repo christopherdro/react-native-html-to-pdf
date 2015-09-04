@@ -11,23 +11,47 @@ Convert html strings to PDF documents using React Native
 
 ## Usage
 ```javascript
-var HTMLtoPDF = require('NativeModules').RNHTMLtoPDF;
 
-createPDF() {
-  var options = {
-    html: '<h1>PDF TEST</h1>', // HTML String
+var React = require('react-native');
+
+var {
+  AlertIOS,
+  AppRegistry,
+  NativeModules: {
+    RNHTMLtoPDF,
+  }
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  View,
+} = React;
+
+var Example = React.createClass({
+
+  createPDF() {
+    var options = {
+      html: '<h1>PDF TEST</h1>', // HTML String
+      
+      fileName: 'test'           // Optional: Custom Filename excluded extention
+                                 // Default: Randomly generated
+
+      directory: 'docs'          // Optional: 'docs' will save the file in the `Documents`
+                                 // Default: Temp directory
+    };
     
-    fileName: 'test'           // Optional: Custom Filename excluded extention
-                               // Default: Randomly generated
+    HTMLtoPDF.convert(options).then((filePath) => {
+      console.log(filePath);
+    });
+  },
 
-    directory: 'docs'          // Optional: 'docs' will save the file in the `Documents`
-                               // Default: Temp directory
-  };
-  
-  HTMLtoPDF.convert(options).then((filePath) => {
-    console.log(filePath);
-  });
-}
+  render() {
+    <View>
+      <TouchableHighlight onPress={this.createPDF}>
+        <Text>Create PDF</Text>
+      </TouchableHighlight>
+    </View>
+  }
+});
 ```
 
 ## Example
