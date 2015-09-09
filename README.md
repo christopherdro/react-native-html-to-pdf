@@ -32,14 +32,14 @@ var Example = React.createClass({
     var options = {
       html: '<h1>PDF TEST</h1>', // HTML String
       
-      fileName: 'test'           // Optional: Custom Filename excluded extention
+      fileName: 'test',          // Optional: Custom Filename excluded extention
                                  // Default: Randomly generated
 
       directory: 'docs'          // Optional: 'docs' will save the file in the `Documents`
                                  // Default: Temp directory
     };
     
-    HTMLtoPDF.convert(options).then((filePath) => {
+    RNHTMLtoPDF.convert(options).then((filePath) => {
       console.log(filePath);
     });
   },
