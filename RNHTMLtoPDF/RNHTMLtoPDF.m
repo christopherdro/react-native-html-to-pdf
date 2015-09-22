@@ -81,8 +81,11 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     } else {
         _filePath = [NSString stringWithFormat:@"%@%@.pdf", NSTemporaryDirectory(), _fileName];
     }
-    
-    [_webView loadHTMLString:_html baseURL:nil];
+  
+    NSString *path = [[NSBundle mainBundle] bundlePath];
+    NSURL *baseURL = [NSURL fileURLWithPath:path];
+  
+    [_webView loadHTMLString:_html baseURL:baseURL];
     
     _resolveBlock = resolve;
     _rejectBlock = reject;
