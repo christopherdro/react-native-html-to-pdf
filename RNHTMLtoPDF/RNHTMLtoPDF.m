@@ -39,7 +39,9 @@
     NSString *_html;
     NSString *_fileName;
     NSString *_filePath;
+    CGSize _PDFSize;
     UIWebView *_webView;
+    float _padding;
     BOOL autoHeight;
 }
 
@@ -77,9 +79,22 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         NSString *documentsPath = [paths objectAtIndex:0];
         
         _filePath = [NSString stringWithFormat:@"%@/%@.pdf", documentsPath, _fileName];
-        
     } else {
         _filePath = [NSString stringWithFormat:@"%@%@.pdf", NSTemporaryDirectory(), _fileName];
+    }
+
+    if (options[@"height"] && options[@"width"]) {
+        float width = [RCTConvert float:options[@"width"]];
+        float height = [RCTConvert float:options[@"height"]];
+        _PDFSize = CGSizeMake(width, height);
+    } else {
+        _PDFSize = PDFSize;
+    }
+
+    if (options[@"padding"]) {
+        _padding = [RCTConvert float:options[@"padding"]];
+    } else {
+        _padding = 10.0f;
     }
   
     NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -101,12 +116,12 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     [render addPrintFormatter:awebView.viewPrintFormatter startingAtPageAtIndex:0];
     
     // Padding is desirable, but optional
-    float padding = 10.0f;
+    // float padding = 5.0f;
     
     // Define the printableRect and paperRect
     // If the printableRect defines the printable area of the page
-    CGRect paperRect = CGRectMake(0, 0, PDFSize.width, PDFSize.height);
-    CGRect printableRect = CGRectMake(padding, padding, PDFSize.width-(padding * 2), PDFSize.height-(padding * 2));
+    CGRect paperRect = CGRectMake(0, 0, _PDFSize.width, _PDFSize.height);
+    CGRect printableRect = CGRectMake(_padding, _padding, _PDFSize.width-(_padding * 2), _PDFSize.height-(_padding * 2));
     
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
     [render setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
@@ -123,4 +138,3 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
 }
 
 @end
-
