@@ -32,11 +32,25 @@ var Example = React.createClass({
     var options = {
       html: '<h1>PDF TEST</h1>', // HTML String
       
-      fileName: 'test',          // Optional: Custom Filename excluded extention
-                                 // Default: Randomly generated
+      fileName: 'test',          /* Optional: Custom Filename excluded extention
+                                    Default: Randomly generated
+                                  */
 
-      directory: 'docs'          // Optional: 'docs' will save the file in the `Documents`
-                                 // Default: Temp directory
+      directory: 'docs'          /* Optional: 'docs' will save the file in the `Documents`
+                                    Default: Temp directory
+                                  */
+
+      height: 800                /* Optional: 800 sets the height of the DOCUMENT that will be produced
+                                    Default: 612
+                                  */
+      width: 1056                /* Optional: 1056 sets the width of the DOCUMENT that will produced
+                                    Default: 792
+                                  */
+      padding: 24                 /* Optional: 24 is the # of pixels between the outer paper edge and
+                                            corresponding content edge.  Example: width of 1056 - 2*padding
+                                            => content width of 1008
+                                    Default: 10
+                                  */
     };
     
     RNHTMLtoPDF.convert(options).then((filePath) => {

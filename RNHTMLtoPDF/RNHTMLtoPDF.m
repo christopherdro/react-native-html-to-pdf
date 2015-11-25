@@ -8,8 +8,9 @@
 #import "RNHTMLtoPDF.h"
 #import "UIView+React.h"
 
-#define PDFSize CGSizeMake(595.2,841.8)
-#define kPaperSizeLetter CGSizeMake(612,792)
+// #define PDFSize CGSizeMake(595.2,841.8)
+#define PDFSize CGSizeMake(612,792)
+// #define kPaperSizeLetter CGSizeMake(612,792)
 
 @implementation UIPrintPageRenderer (PDF)
 - (NSData*) printToPDF
@@ -114,9 +115,6 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     
     UIPrintPageRenderer *render = [[UIPrintPageRenderer alloc] init];
     [render addPrintFormatter:awebView.viewPrintFormatter startingAtPageAtIndex:0];
-    
-    // Padding is desirable, but optional
-    // float padding = 5.0f;
     
     // Define the printableRect and paperRect
     // If the printableRect defines the printable area of the page
