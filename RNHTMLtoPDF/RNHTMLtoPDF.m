@@ -130,7 +130,6 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _resolveBlock(_filePath);
     } else {
         NSError *error;
-        //_rejectBlock(error);
         _rejectBlock(RCTErrorUnspecified, nil, RCTErrorWithMessage(error.description));
     }
 }
