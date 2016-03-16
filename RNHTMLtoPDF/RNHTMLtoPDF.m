@@ -7,6 +7,7 @@
 #import "RCTView.h"
 #import "RNHTMLtoPDF.h"
 #import "UIView+React.h"
+#import "RCTUtils.h"
 
 #define PDFSize CGSizeMake(612,792)
 
@@ -129,7 +130,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _resolveBlock(_filePath);
     } else {
         NSError *error;
-        _rejectBlock(error);
+        _rejectBlock(RCTErrorUnspecified, nil, RCTErrorWithMessage(error.description));
     }
 }
 
