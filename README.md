@@ -17,21 +17,20 @@ var React = require('react-native');
 var {
   AlertIOS,
   AppRegistry,
-  NativeModules: {
-    RNHTMLtoPDF,
-  }
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } = React;
 
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+
 var Example = React.createClass({
 
   createPDF() {
     var options = {
       html: '<h1>PDF TEST</h1>', // HTML String
-      
+
       fileName: 'test',          /* Optional: Custom Filename excluded extention
                                     Default: Randomly generated
                                   */
@@ -52,7 +51,7 @@ var Example = React.createClass({
                                     Default: 10
                                   */
     };
-    
+
     RNHTMLtoPDF.convert(options).then((filePath) => {
       console.log(filePath);
     });
