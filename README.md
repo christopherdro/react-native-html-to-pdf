@@ -71,3 +71,6 @@ var Example = React.createClass({
 
 ## Example
 The example project included demonstrates how you can create a PDF file from a html string and email it as an attachment using `react-native-mail`.
+
+## Android
+The android module pulls in iText to convert html to pdf.  You are supposed to obtain a license for commercial use of iText.
