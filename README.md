@@ -31,11 +31,11 @@ var Example = React.createClass({
     var options = {
       html: '<h1>PDF TEST</h1>', // HTML String
 
+      ****************** OPTIONS BELOW WILL NOT WORK ON ANDROID **************                              
       fileName: 'test',          /* Optional: Custom Filename excluded extention
                                     Default: Randomly generated
                                   */
 
-    ****************** OPTIONS BELOW WILL NOT WORK ON ANDROID **************                              
 
       directory: 'docs'          /* Optional: 'docs' will save the file in the `Documents`
                                     Default: Temp directory
