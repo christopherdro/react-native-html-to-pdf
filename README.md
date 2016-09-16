@@ -35,6 +35,8 @@ var Example = React.createClass({
                                     Default: Randomly generated
                                   */
 
+    ****************** OPTIONS BELOW WILL NOT WORK ON ANDROID **************                              
+
       directory: 'docs'          /* Optional: 'docs' will save the file in the `Documents`
                                     Default: Temp directory
                                   */
