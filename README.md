@@ -74,3 +74,31 @@ The example project included demonstrates how you can create a PDF file from a h
 
 ## Android
 The android module pulls in iText to convert html to pdf.  You are supposed to obtain a license for commercial use of iText.
+
+- Edit `android/settings.gradle` to included
+
+```java
+include ':react-native-html-to-pdf'
+project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDir,'../node_modules/rreact-native-html-to-pdf/android')
+```
+
+- Edit `android/app/build.gradle` file to include
+
+```java
+dependencies {
+  ....
+  compile project(':react-native-html-to-pdf')
+
+}
+```
+
+- Edit `MainApplication.java` to include
+
+```java
+// import the package
+import com.parkerdan.htmltopdf.RNHTMLtoPDFPackage;
+
+// include package
+new MainReactPackage(),
+new RNHTMLtoPDFPackage()
+```
