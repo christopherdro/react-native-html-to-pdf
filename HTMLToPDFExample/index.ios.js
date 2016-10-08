@@ -9,23 +9,24 @@ var React = require('react-native');
 var {
   AlertIOS,
   AppRegistry,
-  NativeModules: {
-    RNHTMLtoPDF,
-    RNMail
-  }
   StyleSheet,
   Text,
   View,
 } = React;
 
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNMail from 'react-native-mail';
+// there's a version of RNMail @ https://github.com/parkerdan/react-native-mail
+// that removes the NativeModules dependency
+
 var HTMLToPDFExample = React.createClass({
-  
+
   componentDidMount() {
     var options = {
       html: '<h1>PDF TEST</h1>',
       fileName: 'test'
     };
-    
+
   RNHTMLtoPDF.convert(options).then((result) => {
     RNMail.mail({
         subject: '',

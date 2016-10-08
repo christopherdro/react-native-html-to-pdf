@@ -17,24 +17,25 @@ var React = require('react-native');
 var {
   AlertIOS,
   AppRegistry,
-  NativeModules: {
-    RNHTMLtoPDF,
-  }
   StyleSheet,
   Text,
   TouchableHighlight,
   View,
 } = React;
 
+import RNHTMLtoPDF from 'react-native-html-to-pdf';
+
 var Example = React.createClass({
 
   createPDF() {
     var options = {
       html: '<h1>PDF TEST</h1>', // HTML String
-      
+
+      ****************** OPTIONS BELOW WILL NOT WORK ON ANDROID **************                              
       fileName: 'test',          /* Optional: Custom Filename excluded extention
                                     Default: Randomly generated
                                   */
+
 
       directory: 'docs'          /* Optional: 'docs' will save the file in the `Documents`
                                     Default: Temp directory
@@ -52,7 +53,7 @@ var Example = React.createClass({
                                     Default: 10
                                   */
     };
-    
+
     RNHTMLtoPDF.convert(options).then((filePath) => {
       console.log(filePath);
     });
@@ -70,3 +71,34 @@ var Example = React.createClass({
 
 ## Example
 The example project included demonstrates how you can create a PDF file from a html string and email it as an attachment using `react-native-mail`.
+
+## Android
+The android module pulls in iText to convert html to pdf.  You are supposed to obtain a license for commercial use of iText.
+
+- Edit `android/settings.gradle` to included
+
+```java
+include ':react-native-html-to-pdf'
+project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDir,'../node_modules/rreact-native-html-to-pdf/android')
+```
+
+- Edit `android/app/build.gradle` file to include
+
+```java
+dependencies {
+  ....
+  compile project(':react-native-html-to-pdf')
+
+}
+```
+
+- Edit `MainApplication.java` to include
+
+```java
+// import the package
+import com.parkerdan.htmltopdf.RNHTMLtoPDFPackage;
+
+// include package
+new MainReactPackage(),
+new RNHTMLtoPDFPackage()
+```
