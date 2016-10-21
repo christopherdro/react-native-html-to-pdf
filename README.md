@@ -40,7 +40,9 @@ var Example = React.createClass({
       directory: 'docs'          /* Optional: 'docs' will save the file in the `Documents`
                                     Default: Temp directory
                                   */
-
+      base64: true               /* Optional: get the base64 PDF value
+                                    Default: false
+                                 */
       height: 800                /* Optional: 800 sets the height of the DOCUMENT that will be produced
                                     Default: 612
                                   */
@@ -54,9 +56,11 @@ var Example = React.createClass({
                                   */
     };
 
-    RNHTMLtoPDF.convert(options).then((filePath) => {
-      console.log(filePath);
+    RNHTMLtoPDF.convert(options).then((data) => {
+      console.log(data.filePath);
+      console.log(data.base64);
     });
+                                  // data.base64 will be empty if base64 is set to false
   },
 
   render() {
