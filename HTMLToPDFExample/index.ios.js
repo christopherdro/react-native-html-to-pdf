@@ -4,22 +4,22 @@
  */
 'use strict';
 
-var React = require('react-native');
+import React, { Component } from 'react';
 
-var {
-  AlertIOS,
+import {
   AppRegistry,
   StyleSheet,
+  AlertIOS,
   Text,
   View,
-} = React;
+} from 'react-native';
 
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 import RNMail from 'react-native-mail';
 // there's a version of RNMail @ https://github.com/parkerdan/react-native-mail
 // that removes the NativeModules dependency
 
-var HTMLToPDFExample = React.createClass({
+class HTMLToPDFExample extends Component {
 
   componentDidMount() {
     var options = {
@@ -27,20 +27,20 @@ var HTMLToPDFExample = React.createClass({
       fileName: 'test'
     };
 
-  RNHTMLtoPDF.convert(options).then((result) => {
-    RNMail.mail({
-        subject: '',
-        recipients: [''],
-        body: '',
-        attachmentPath: result,
-        attachmentType: 'pdf',
+    RNHTMLtoPDF.convert(options).then((data) => {
+      RNMail.mail({
+         subject: '',
+         recipients: [''],
+         body: '',
+         attachmentPath: data.filePath,
+         attachmentType: 'pdf',
       }, (error, event) => {
-        if(error) {
+        if (error) {
           AlertIOS.alert('Error', 'Could not send mail. Please send a mail to support@example.com');
         }
       });
     });
-  },
+  }
 
   render() {
     return (
@@ -58,9 +58,9 @@ var HTMLToPDFExample = React.createClass({
       </View>
     );
   }
-});
+}
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
