@@ -83,7 +83,7 @@ The android module pulls in iText to convert html to pdf.  You are supposed to o
 
 ```java
 include ':react-native-html-to-pdf'
-project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDir,'../node_modules/rreact-native-html-to-pdf/android')
+project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDir,'../node_modules/react-native-html-to-pdf/android')
 ```
 
 - Edit `android/app/build.gradle` file to include
