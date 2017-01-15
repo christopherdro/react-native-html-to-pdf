@@ -27,12 +27,12 @@ var HTMLToPDFExample = React.createClass({
       fileName: 'test'
     };
 
-  RNHTMLtoPDF.convert(options).then((result) => {
+  RNHTMLtoPDF.convert(options).then((data) => {
     RNMail.mail({
         subject: '',
         recipients: [''],
         body: '',
-        attachmentPath: result,
+        attachmentPath: data.filePath,
         attachmentType: 'pdf',
       }, (error, event) => {
         if(error) {
