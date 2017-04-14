@@ -7,17 +7,23 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableArray;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
+import java.nio.charset.Charset;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.codec.Base64;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.tool.xml.XMLWorkerFontProvider;
 
 import android.os.Environment;
 
@@ -25,6 +31,9 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
   private Promise promise;
   private final ReactApplicationContext mReactContext;
+  private Set<String> customFonts = new HashSet<>();
+
+  XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
 
   public RNHTMLtoPDFModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -48,6 +57,15 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
         fileName = options.getString("fileName");
       } else {
         fileName = UUID.randomUUID().toString();
+      }
+
+      if (options.hasKey("fonts")) {
+        if (options.getArray("fonts") != null) {
+          final ReadableArray fonts = options.getArray("fonts");
+          for (int i = 0; i < fonts.size(); i++) {
+            customFonts.add(fonts.getString(i));
+          }
+        }
       }
 
       if (options.hasKey("directory") && options.getString("directory").equals("docs")) {
@@ -82,8 +100,13 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
       PdfWriter pdf = PdfWriter.getInstance(doc, new FileOutputStream(file));
 
+      FontFactory.setFontImp(fontProvider);
+      for (String font : customFonts) {
+        fontProvider.register( font );
+      }
+
       doc.open();
-      XMLWorkerHelper.getInstance().parseXHtml(pdf, doc,in);
+      XMLWorkerHelper.getInstance().parseXHtml(pdf, doc, in, null, Charset.forName("UTF-8"), fontProvider);
       doc.close();
       in.close();
 
@@ -108,5 +131,3 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
   }
 
 }
-
-
