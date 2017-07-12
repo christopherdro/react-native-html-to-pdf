@@ -6,11 +6,11 @@ Convert html strings to PDF documents using React Native
 
 1. Run `npm install react-native-html-to-pdf --save`
 
-### Automatic
+### Option 1: Automatic
 
 2. Run `react-native link`
 
-### Manual
+### Option 2: Manual
 
 #### iOS
 
@@ -19,7 +19,7 @@ Convert html strings to PDF documents using React Native
    [(Screenshot)](http://url.brentvatne.ca/17Xfe).
 
 #### Android
-The android module pulls in iText to convert html to pdf.  You are supposed to obtain a license for commercial use of iText.
+The android module pulls in iText to convert html to pdf. A license is required for commercial use.
 
 - Edit `android/settings.gradle` to included
 
@@ -52,58 +52,26 @@ new RNHTMLtoPDFPackage()
 ## Usage
 ```javascript
 
-var React = require('react');
-var ReactNative = require('react-native');
+import React, { Component } from 'react';
 
-var {
-  AlertIOS,
-  AppRegistry,
-  StyleSheet,
+import {
   Text,
   TouchableHighlight,
   View,
-} = ReactNative;
+} = from 'react-native';
 
 import RNHTMLtoPDF from 'react-native-html-to-pdf';
 
-var Example = React.createClass({
-
-  createPDF() {
-    var options = {
-      html: '<h1>PDF TEST</h1>', // HTML String
-
-      // ****************** OPTIONS BELOW WILL NOT WORK ON ANDROID **************                              
-      fileName: 'test',          /* Optional: Custom Filename excluded extension
-                                    Default: Randomly generated
-                                  */
-
-
-      directory: 'docs',         /* Optional: 'docs' will save the file in the `Documents`
-                                    Default: Temp directory
-                                  */
-
-      base64: true               /* Optional: get the base64 PDF value
-                                    Default: false
-                                 */
-
-      height: 800                /* Optional: 800 sets the height of the DOCUMENT that will be produced
-
-                                    Default: 612
-                                  */
-      width: 1056,               /* Optional: 1056 sets the width of the DOCUMENT that will produced
-                                    Default: 792
-                                  */
-      padding: 24,                /* Optional: 24 is the # of pixels between the outer paper edge and
-                                            corresponding content edge.  Example: width of 1056 - 2*padding
-                                            => content width of 1008
-                                    Default: 10
-                                  */
+class Example extends Component {
+  async createPDF() {
+    let options = {
+      html: '<h1>PDF TEST</h1>',
+      fileName: 'test',
+      directory: 'docs',
     };
 
-    RNHTMLtoPDF.convert(options).then((data) => {
-      console.log(data.filePath);
-      console.log(data.base64);
-    });
+    let file = await RNHTMLtoPDF.convert(options)
+    console.log(file.filePath);
   },
 
   render() {
@@ -113,5 +81,29 @@ var Example = React.createClass({
       </TouchableHighlight>
     </View>
   }
-});
+}
 ```
+
+## Options
+
+| Param | Type | Default | Note |
+|---|---|---|---|
+| `html` | `string` |  | HTML string to be converted
+| `fileName` | `string` | Random  | Custom Filename excluding .pdf extension
+| `base64` | boolean | false  | return base64 string of pdf file (not recommended)
+
+
+#### iOS Only
+
+| Param | Type | Default | Note |
+|---|---|---|---|
+| `height` | number | 612  | Set document height (points)
+| `width` | number | 792  | Set document width (points)
+| `padding` | number | 10  | Outer padding (points)
+
+
+##### Android Only
+
+| Param | Type | Default | Note |
+|---|---|---|---|
+| `fonts` | Array | | Allow custom fonts `['/fonts/TimesNewRoman.ttf', '/fonts/Verdana.ttf']`
