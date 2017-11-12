@@ -24,6 +24,20 @@ import com.itextpdf.text.pdf.codec.Base64;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.tool.xml.XMLWorkerFontProvider;
+import com.itextpdf.tool.xml.html.TagProcessorFactory;
+import com.itextpdf.tool.xml.html.Tags;
+import com.itextpdf.tool.xml.html.HTML;
+import com.itextpdf.tool.xml.css.CssFilesImpl;
+import com.itextpdf.tool.xml.css.StyleAttrCSSResolver;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
+import com.itextpdf.tool.xml.html.CssAppliersImpl;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
+import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
+import com.itextpdf.tool.xml.XMLWorker;
+import com.itextpdf.tool.xml.Pipeline;
+import com.itextpdf.tool.xml.parser.XMLParser;
+import com.itextpdf.tool.xml.pipeline.css.CssResolverPipeline;
+import java.nio.charset.Charset;
 
 import android.os.Environment;
 
@@ -102,11 +116,26 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
       FontFactory.setFontImp(fontProvider);
       for (String font : customFonts) {
-        fontProvider.register( font );
+        fontProvider.register(font);
       }
 
       doc.open();
-      XMLWorkerHelper.getInstance().parseXHtml(pdf, doc, in, null, Charset.forName("UTF-8"), fontProvider);
+
+      final TagProcessorFactory tagProcessorFactory = Tags.getHtmlTagProcessorFactory();
+      tagProcessorFactory.removeProcessor(HTML.Tag.IMG);
+      tagProcessorFactory.addProcessor(new ImageTagProcessor(), HTML.Tag.IMG);
+      final CssFilesImpl cssFiles = new CssFilesImpl();
+      cssFiles.add(XMLWorkerHelper.getInstance().getDefaultCSS());
+      final StyleAttrCSSResolver cssResolver = new StyleAttrCSSResolver(cssFiles);
+      final HtmlPipelineContext hpc = new HtmlPipelineContext(new CssAppliersImpl(fontProvider));
+      hpc.setAcceptUnknown(true).autoBookmark(true).setTagFactory(tagProcessorFactory);
+      final HtmlPipeline htmlPipeline = new HtmlPipeline(hpc, new PdfWriterPipeline(doc, pdf));
+      final Pipeline<?> pipeline = new CssResolverPipeline(cssResolver, htmlPipeline);
+      final XMLWorker worker = new XMLWorker(pipeline, true);
+      final Charset charset = Charset.forName("UTF-8");
+      final XMLParser xmlParser = new XMLParser(true, worker, charset);
+      xmlParser.parse(in, charset);
+
       doc.close();
       in.close();
 
