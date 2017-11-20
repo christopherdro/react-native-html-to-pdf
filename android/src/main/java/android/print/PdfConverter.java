@@ -45,22 +45,23 @@ public class PdfConverter implements Runnable {
 
     @Override
     public void run() {
-        if (mContext == null || mHtmlString == null || mPdfFile == null) return;
-
         mWebView = new WebView(mContext);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
-
-                PrintDocumentAdapter documentAdapter = mWebView.createPrintDocumentAdapter();
-                documentAdapter.onLayout(null, getPdfPrintAttrs(), null, new PrintDocumentAdapter.LayoutResultCallback() {}, null);
-                documentAdapter.onWrite(new PageRange[]{PageRange.ALL_PAGES}, getOutputFileDescriptor(), null, new PrintDocumentAdapter.WriteResultCallback() {
-                    @Override
-                    public void onWriteFinished(PageRange[] pages) {
-                        destroy();
-                    }
-                });
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
+                    throw new RuntimeException("call requires API level 19");
+                else {
+                    PrintDocumentAdapter documentAdapter = mWebView.createPrintDocumentAdapter();
+                    documentAdapter.onLayout(null, getPdfPrintAttrs(), null, new PrintDocumentAdapter.LayoutResultCallback() {
+                    }, null);
+                    documentAdapter.onWrite(new PageRange[]{PageRange.ALL_PAGES}, getOutputFileDescriptor(), null, new PrintDocumentAdapter.WriteResultCallback() {
+                        @Override
+                        public void onWriteFinished(PageRange[] pages) {
+                            destroy();
+                        }
+                    });
+                }
             }
         });
         mWebView.loadData(mHtmlString, "text/HTML", "UTF-8");
@@ -75,6 +76,13 @@ public class PdfConverter implements Runnable {
     }
 
     public void convert(Context context, String htmlString, File file) {
+        if (context == null)
+            throw new IllegalArgumentException("context can't be null");
+        if (htmlString == null)
+            throw new IllegalArgumentException("htmlString can't be null");
+        if (file == null)
+            throw new IllegalArgumentException("file can't be null");
+
         if (mIsCurrentlyConverting)
             return;
 

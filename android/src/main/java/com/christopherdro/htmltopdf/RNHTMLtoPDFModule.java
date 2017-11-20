@@ -11,6 +11,10 @@ import com.facebook.react.bridge.WritableMap;
 import java.io.File;
 import java.util.UUID;
 
+import android.util.Base64;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 
 import android.os.Environment;
 import android.print.PdfConverter;
@@ -52,9 +56,16 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
       }
 
       String filePath = convertToPDF(htmlString, destinationFile);
+      String base64 = "";
+
+      if (options.hasKey("base64") && options.getBoolean("base64") == true) {
+        base64 = encodeFromFile(destinationFile);
+      }
+
 
       WritableMap resultMap = Arguments.createMap();
       resultMap.putString("filePath", filePath);
+      resultMap.putString("base64", base64);
 
       promise.resolve(resultMap);
     } catch (Exception e) {
@@ -86,4 +97,10 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
     }
   }
 
+  private String encodeFromFile(File file) throws IOException{
+    RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+    byte[] fileBytes = new byte[(int)randomAccessFile.length()];
+    randomAccessFile.readFully(fileBytes);
+    return Base64.encodeToString(fileBytes, Base64.DEFAULT);
+  }
 }
