@@ -34,6 +34,4 @@ repositories {
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
-    compile 'com.itextpdf:itextg:5.5.9'
-    compile 'com.itextpdf.tool:xmlworker:5.5.9'
 }

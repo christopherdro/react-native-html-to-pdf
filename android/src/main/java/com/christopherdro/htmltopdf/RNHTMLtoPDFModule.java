@@ -7,33 +7,21 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.ReadableArray;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
 import java.util.UUID;
-import java.util.HashSet;
-import java.util.Set;
-import java.nio.charset.Charset;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.codec.Base64;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
-import com.itextpdf.text.FontFactory;
-import com.itextpdf.tool.xml.XMLWorkerFontProvider;
+import android.util.Base64;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 
 import android.os.Environment;
+import android.print.PdfConverter;
 
 public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
-  private Promise promise;
   private final ReactApplicationContext mReactContext;
-  private Set<String> customFonts = new HashSet<>();
-
-  XMLWorkerFontProvider fontProvider = new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
 
   public RNHTMLtoPDFModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -59,15 +47,6 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
         fileName = UUID.randomUUID().toString();
       }
 
-      if (options.hasKey("fonts")) {
-        if (options.getArray("fonts") != null) {
-          final ReadableArray fonts = options.getArray("fonts");
-          for (int i = 0; i < fonts.size(); i++) {
-            customFonts.add(fonts.getString(i));
-          }
-        }
-      }
-
       if (options.hasKey("directory") && options.getString("directory").equals("docs")) {
         String state = Environment.getExternalStorageState();
           File path = (Environment.MEDIA_MOUNTED.equals(state)) ?
@@ -84,8 +63,9 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
       String base64 = "";
 
       if (options.hasKey("base64") && options.getBoolean("base64") == true) {
-        base64 = Base64.encodeFromFile(filePath);
+        base64 = encodeFromFile(destinationFile);
       }
+
 
       WritableMap resultMap = Arguments.createMap();
       resultMap.putString("filePath", filePath);
@@ -99,21 +79,8 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
   private String convertToPDF(String htmlString, File file) throws Exception {
     try {
-      Document doc = new Document();
-      InputStream in = new ByteArrayInputStream(htmlString.getBytes());
-
-      PdfWriter pdf = PdfWriter.getInstance(doc, new FileOutputStream(file));
-
-      FontFactory.setFontImp(fontProvider);
-      for (String font : customFonts) {
-        fontProvider.register( font );
-      }
-
-      doc.open();
-      XMLWorkerHelper.getInstance().parseXHtml(pdf, doc, in, null, Charset.forName("UTF-8"), fontProvider);
-      doc.close();
-      in.close();
-
+      PdfConverter.getInstance()
+              .convert(mReactContext, htmlString, file);
       String absolutePath = file.getAbsolutePath();
 
       return absolutePath;
@@ -134,4 +101,10 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
     }
   }
 
+  private String encodeFromFile(File file) throws IOException{
+    RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
+    byte[] fileBytes = new byte[(int)randomAccessFile.length()];
+    randomAccessFile.readFully(fileBytes);
+    return Base64.encodeToString(fileBytes, Base64.DEFAULT);
+  }
 }
