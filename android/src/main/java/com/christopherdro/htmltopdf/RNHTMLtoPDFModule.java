@@ -11,11 +11,6 @@ import com.facebook.react.bridge.WritableMap;
 import java.io.File;
 import java.util.UUID;
 
-import android.util.Base64;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
-
 import android.os.Environment;
 import android.print.PdfConverter;
 
@@ -59,31 +54,29 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
         destinationFile = getTempFile(fileName);
       }
 
-      String filePath = convertToPDF(htmlString, destinationFile);
-      String base64 = "";
-
-      if (options.hasKey("base64") && options.getBoolean("base64") == true) {
-        base64 = encodeFromFile(destinationFile);
-      }
-
-
-      WritableMap resultMap = Arguments.createMap();
-      resultMap.putString("filePath", filePath);
-      resultMap.putString("base64", base64);
-
-      promise.resolve(resultMap);
+      convertToPDF(
+        htmlString,
+        destinationFile,
+        options.hasKey("base64") && options.getBoolean("base64") == true,
+        Arguments.createMap(),
+        promise
+      );
     } catch (Exception e) {
       promise.reject(e.getMessage());
     }
   }
 
-  private String convertToPDF(String htmlString, File file) throws Exception {
+  private void convertToPDF(String htmlString, File file, boolean shouldEncode, WritableMap resultMap, Promise promise) throws Exception {
     try {
       PdfConverter.getInstance()
-              .convert(mReactContext, htmlString, file);
-      String absolutePath = file.getAbsolutePath();
-
-      return absolutePath;
+              .convert(
+                mReactContext,
+                htmlString,
+                file,
+                shouldEncode,
+                resultMap,
+                promise
+              );
     } catch (Exception e) {
       throw new Exception(e);
     }
@@ -99,12 +92,5 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
     } catch (Exception e) {
       throw new Exception(e);
     }
-  }
-
-  private String encodeFromFile(File file) throws IOException{
-    RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-    byte[] fileBytes = new byte[(int)randomAccessFile.length()];
-    randomAccessFile.readFully(fileBytes);
-    return Base64.encodeToString(fileBytes, Base64.DEFAULT);
   }
 }
