@@ -45,7 +45,7 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
       if (options.hasKey("directory") && options.getString("directory").equals("docs")) {
         String state = Environment.getExternalStorageState();
 
-        String directoryPath;
+        String documentsPath;
         if (Integer.valueOf(android.os.Build.VERSION.SDK) >= 19) {
           documentsPath = Environment.DIRECTORY_DOCUMENTS;
         } else {
