@@ -41,7 +41,9 @@
     NSString *_filePath;
     CGSize _PDFSize;
     UIWebView *_webView;
-    float _padding;
+    // float _padding;
+    float _paddingVertical;
+    float _paddingHorizontal;
     BOOL _base64;
     BOOL autoHeight;
 }
@@ -103,10 +105,22 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _PDFSize = PDFSize;
     }
 
-    if (options[@"padding"]) {
-        _padding = [RCTConvert float:options[@"padding"]];
+    // if (options[@"padding"]) {
+    //     _padding = [RCTConvert float:options[@"padding"]];
+    // } else {
+    //     _padding = 10.0f;
+    // }
+
+    if (options[@"paddingVertical"]) {
+        _paddingVertical = [RCTConvert float:options[@"paddingVertical"]];
     } else {
-        _padding = 10.0f;
+        _paddingVertical = 10.0f;
+    }
+
+    if (options[@"paddingHorizontal"]) {
+        _paddingHorizontal = [RCTConvert float:options[@"paddingHorizontal"]];
+    } else {
+        _paddingHorizontal = 10.0f;
     }
 
     NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -130,7 +144,9 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     // Define the printableRect and paperRect
     // If the printableRect defines the printable area of the page
     CGRect paperRect = CGRectMake(0, 0, _PDFSize.width, _PDFSize.height);
-    CGRect printableRect = CGRectMake(_padding, _padding, _PDFSize.width-(_padding * 2), _PDFSize.height-(_padding * 2));
+    // CGRect printableRect = CGRectMake(_padding, _padding, _PDFSize.width-(_padding * 2), _PDFSize.height-(_padding * 2));
+    CGRect printableRect = CGRectMake(_paddingHorizontal, _paddingVertical, _PDFSize.width-(_paddingHorizontal * 2), _PDFSize.height-(_paddingVertical * 2));
+
 
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
     [render setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];

@@ -99,7 +99,8 @@ class Example extends Component {
 |---|---|---|---|
 | `height` | number | 792  | Set document height (points)
 | `width` | number | 612  | Set document width (points)
-| `padding` | number | 10  | Outer padding (points)
+| `paddingVertical` | number | 10  | Outer padding (points)
+| `paddingHorizontal` | number | 10  | Outer padding (points)
 
 
 ##### Android Only
