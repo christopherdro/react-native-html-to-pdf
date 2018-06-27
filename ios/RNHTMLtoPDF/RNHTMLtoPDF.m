@@ -12,7 +12,7 @@
 #define PDFSize CGSizeMake(612,792)
 
 @implementation UIPrintPageRenderer (PDF)
-- (NSData*) printToPDF(NSUInteger*)_numberOfPages
+- (NSData*) printToPDF:(NSInteger**)_numberOfPages
 {
     NSMutableData *pdfData = [NSMutableData data];
     UIGraphicsBeginPDFContextToData( pdfData, self.paperRect, nil );
