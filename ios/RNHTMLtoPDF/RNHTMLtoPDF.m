@@ -12,7 +12,7 @@
 #define PDFSize CGSizeMake(612,792)
 
 @implementation UIPrintPageRenderer (PDF)
-- (NSData*) printToPDF
+- (NSData*) printToPDF(NSUInteger*)_numberOfPages
 {
     NSMutableData *pdfData = [NSMutableData data];
     UIGraphicsBeginPDFContextToData( pdfData, self.paperRect, nil );
@@ -26,6 +26,8 @@
         UIGraphicsBeginPDFPage();
         [self drawPageAtIndex: i inRect: bounds];
     }
+    
+    *_numberOfPages = self.numberOfPages;
 
     UIGraphicsEndPDFContext();
     return pdfData;
@@ -39,6 +41,7 @@
     NSString *_html;
     NSString *_fileName;
     NSString *_filePath;
+    NSInteger *_numberOfPages;
     CGSize _PDFSize;
     UIWebView *_webView;
     // float _padding;
@@ -151,7 +154,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
     [render setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
 
-    NSData *pdfData = [render printToPDF];
+    NSData * pdfData = [render printToPDF:&_numberOfPages];
 
     if (pdfData) {
         NSString *pdfBase64 = @"";
@@ -162,6 +165,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         }
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                              pdfBase64, @"base64",
+                             [NSString stringWithFormat: @"%ld", (long)_numberOfPages], @"numberOfPages",
                              _filePath, @"filePath", nil];
         _resolveBlock(data);
     } else {
