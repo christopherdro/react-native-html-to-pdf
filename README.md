@@ -19,8 +19,6 @@ Convert html strings to PDF documents using React Native
    [(Screenshot)](http://url.brentvatne.ca/17Xfe).
 
 #### Android
-The android module pulls in iText to convert html to pdf. A license is required for commercial use.
-
 - Edit `android/settings.gradle` to included
 
 ```java
