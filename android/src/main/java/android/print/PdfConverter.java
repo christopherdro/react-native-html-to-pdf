@@ -98,13 +98,13 @@ public class PdfConverter implements Runnable {
     }
 
     public void convert(Context context, String htmlString, File file, boolean shouldEncode, WritableMap resultMap,
-            Promise promise, String baseURL) {
+            Promise promise, String baseURL) throws Exception {
         if (context == null)
-            throw new IllegalArgumentException("context can't be null");
+            throw new Exception("context can't be null");
         if (htmlString == null)
-            throw new IllegalArgumentException("htmlString can't be null");
+            throw new Exception("htmlString can't be null");
         if (file == null)
-            throw new IllegalArgumentException("file can't be null");
+            throw new Exception("file can't be null");
 
         if (mIsCurrentlyConverting)
             return;

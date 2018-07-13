@@ -80,7 +80,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _fileName = [[NSProcessInfo processInfo] globallyUniqueString];
     }
 
-    if (options[@"directory"] && [options[@"directory"] isEqualToString:@"docs"]){
+    if (options[@"directory"] && [options[@"directory"] isEqualToString:@"Documents"]){
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsPath = [paths objectAtIndex:0];
 
@@ -90,11 +90,11 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     }
 
     if (options[@"base64"] && [options[@"base64"] boolValue]) {
-        _base64 = true;   
+        _base64 = true;
     } else {
-        _base64 = false;   
+        _base64 = false;
     }
-    
+
     if (options[@"height"] && options[@"width"]) {
         float width = [RCTConvert float:options[@"width"]];
         float height = [RCTConvert float:options[@"height"]];
@@ -139,10 +139,10 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
 
     if (pdfData) {
         NSString *pdfBase64 = @"";
-        
+
         [pdfData writeToFile:_filePath atomically:YES];
         if (_base64) {
-            pdfBase64 = [pdfData base64EncodedStringWithOptions:0];   
+            pdfBase64 = [pdfData base64EncodedStringWithOptions:0];
         }
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                              pdfBase64, @"base64",
