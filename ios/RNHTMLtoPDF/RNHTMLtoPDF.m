@@ -44,8 +44,10 @@
     NSInteger *_numberOfPages;
     CGSize _PDFSize;
     UIWebView *_webView;
-    float _paddingVertical;
-    float _paddingHorizontal;
+    float _paddingBottom;
+    float _paddingTop;
+    float _paddingLeft;
+    float _paddingRight;
     BOOL _base64;
     BOOL autoHeight;
 }
@@ -107,16 +109,35 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _PDFSize = PDFSize;
     }
 
-    if (options[@"paddingVertical"]) {
-        _paddingVertical = [RCTConvert float:options[@"paddingVertical"]];
+    if (options[@"paddingBottom"]) {
+        _paddingBottom = [RCTConvert float:options[@"paddingBottom"]];
     } else {
-        _paddingVertical = 10.0f;
+        _paddingBottom = 10.0f;
     }
 
-    if (options[@"paddingHorizontal"]) {
-        _paddingHorizontal = [RCTConvert float:options[@"paddingHorizontal"]];
+    if (options[@"paddingLeft"]) {
+        _paddingLeft = [RCTConvert float:options[@"paddingLeft"]];
     } else {
-        _paddingHorizontal = 10.0f;
+        _paddingLeft = 10.0f;
+    }
+
+    if (options[@"paddingTop"]) {
+        _paddingTop = [RCTConvert float:options[@"paddingTop"]];
+    } else {
+        _paddingTop = 10.0f;
+    }
+
+    if (options[@"paddingRight"]) {
+        _paddingRight = [RCTConvert float:options[@"paddingRight"]];
+    } else {
+        _paddingRight = 10.0f;
+    }
+
+    if (options[@"padding"]) {
+        _paddingTop = [RCTConvert float:options[@"padding"]];
+        _paddingBottom = [RCTConvert float:options[@"padding"]];
+        _paddingLeft = [RCTConvert float:options[@"padding"]];
+        _paddingRight = [RCTConvert float:options[@"padding"]];
     }
 
     NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -140,7 +161,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     // Define the printableRect and paperRect
     // If the printableRect defines the printable area of the page
     CGRect paperRect = CGRectMake(0, 0, _PDFSize.width, _PDFSize.height);
-    CGRect printableRect = CGRectMake(_paddingHorizontal, _paddingVertical, _PDFSize.width-(_paddingHorizontal * 2), _PDFSize.height-(_paddingVertical * 2));
+    CGRect printableRect = CGRectMake(_paddingTop, _paddingLeft, _PDFSize.width-(_paddingLeft + _paddingRight), _PDFSize.height-(_paddingBottom + _paddingTop));
 
 
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
