@@ -1,6 +1,7 @@
 
 //  Created by Christopher on 9/3/15.
 
+#import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 #import <React/RCTConvert.h>
 #import <React/RCTEventDispatcher.h>
@@ -24,6 +25,12 @@
     for ( int i = 0 ; i < self.numberOfPages ; i++ )
     {
         UIGraphicsBeginPDFPage();
+
+        UIColor *myColor = [UIColor colorWithRed: (246.0/255.0) green:(245.0/255.0) blue:(240.0/255.0) alpha:1];
+        CGContextRef currentContext = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(currentContext, myColor.CGColor);
+        CGContextFillRect(currentContext, self.paperRect);
+
         [self drawPageAtIndex: i inRect: bounds];
     }
     
