@@ -12,9 +12,7 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
 import android.webkit.WebSettings;
-
 import java.io.File;
 import android.util.Base64;
 import java.io.IOException;
