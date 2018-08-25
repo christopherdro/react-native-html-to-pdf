@@ -13,7 +13,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import android.webkit.WebSettings; // added this
+import android.webkit.WebSettings;
 
 import java.io.File;
 import android.util.Base64;
@@ -88,7 +88,6 @@ public class PdfConverter implements Runnable {
                 }
             }
         });
-//         mWebView.loadDataWithBaseURL(mBaseURL, mHtmlString, "text/HTML", "UTF-8", null);
         WebSettings settings = mWebView.getSettings();
         settings.setDefaultTextEncodingName("utf-8");
         mWebView.loadData(mHtmlString, "text/HTML; charset=utf-8", null);
