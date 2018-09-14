@@ -39,7 +39,7 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
       if (options.hasKey("fileName")) {
         fileName = options.getString("fileName");
       } else {
-        fileName = UUID.randomUUID().toString();
+        fileName = "PDF_" + UUID.randomUUID().toString();
       }
 
       if (options.hasKey("directory") && options.getString("directory").equals("docs")) {
@@ -77,7 +77,7 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
   private File getTempFile(String fileName) throws Exception {
     try {
       File outputDir = getReactApplicationContext().getCacheDir();
-      File outputFile = File.createTempFile("PDF_" + UUID.randomUUID().toString(), ".pdf", outputDir);
+      File outputFile = File.createTempFile(fileName, ".pdf", outputDir);
 
       return outputFile;
 
