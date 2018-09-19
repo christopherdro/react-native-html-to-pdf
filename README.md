@@ -65,7 +65,7 @@ export default class Example extends Component {
     let options = {
       html: '<h1>PDF TEST</h1>',
       fileName: 'test',
-      directory: 'docs',
+      directory: 'Documents',
     };
 
     let file = await RNHTMLtoPDF.convert(options)
@@ -91,7 +91,8 @@ export default class Example extends Component {
 |---|---|---|---|
 | `html` | `string` |  | HTML string to be converted
 | `fileName` | `string` | Random  | Custom Filename excluding .pdf extension
-| `base64` | boolean | false  | return base64 string of pdf file (not recommended)
+| `base64` | `boolean` | false  | return base64 string of pdf file (not recommended)
+| `directory` | `string` |default cache directory| Directory where the file will be created (`Documents` folder in example above). Please note, on iOS `Documents` is the only custom value that is accepted.
 
 
 #### iOS Only
@@ -103,7 +104,7 @@ export default class Example extends Component {
 | `padding` | number | 10  | Outer padding (points)
 
 
-##### Android Only
+#### Android Only
 
 | Param | Type | Default | Note |
 |---|---|---|---|
