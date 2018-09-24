@@ -101,7 +101,11 @@ export default class Example extends Component {
 |---|---|---|---|
 | `height` | number | 792  | Set document height (points)
 | `width` | number | 612  | Set document width (points)
-| `padding` | number | 10  | Outer padding (points)
+| `paddingLeft` | number | 10  | Outer left padding (points)
+| `paddingRight` | number | 10  | Outer right padding (points)
+| `paddingTop` | number | 10  | Outer top padding (points)
+| `paddingBottom` | number | 10  | Outer bottom padding (points)
+| `padding` | number | 10 | Outer padding for any side (points), overrides any padding listed before
 
 
 #### Android Only

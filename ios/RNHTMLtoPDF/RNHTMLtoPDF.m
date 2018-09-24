@@ -1,6 +1,7 @@
 
 //  Created by Christopher on 9/3/15.
 
+#import <CoreGraphics/CoreGraphics.h>
 #import <UIKit/UIKit.h>
 #import <React/RCTConvert.h>
 #import <React/RCTEventDispatcher.h>
@@ -12,7 +13,7 @@
 #define PDFSize CGSizeMake(612,792)
 
 @implementation UIPrintPageRenderer (PDF)
-- (NSData*) printToPDF
+- (NSData*) printToPDF:(NSInteger**)_numberOfPages
 {
     NSMutableData *pdfData = [NSMutableData data];
     UIGraphicsBeginPDFContextToData( pdfData, self.paperRect, nil );
@@ -24,8 +25,16 @@
     for ( int i = 0 ; i < self.numberOfPages ; i++ )
     {
         UIGraphicsBeginPDFPage();
+
+        UIColor *myColor = [UIColor colorWithRed: (246.0/255.0) green:(245.0/255.0) blue:(240.0/255.0) alpha:1];
+        CGContextRef currentContext = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(currentContext, myColor.CGColor);
+        CGContextFillRect(currentContext, self.paperRect);
+
         [self drawPageAtIndex: i inRect: bounds];
     }
+    
+    *_numberOfPages = self.numberOfPages;
 
     UIGraphicsEndPDFContext();
     return pdfData;
@@ -39,9 +48,13 @@
     NSString *_html;
     NSString *_fileName;
     NSString *_filePath;
+    NSInteger *_numberOfPages;
     CGSize _PDFSize;
     UIWebView *_webView;
-    float _padding;
+    float _paddingBottom;
+    float _paddingTop;
+    float _paddingLeft;
+    float _paddingRight;
     BOOL _base64;
     BOOL autoHeight;
 }
@@ -103,10 +116,35 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _PDFSize = PDFSize;
     }
 
-    if (options[@"padding"]) {
-        _padding = [RCTConvert float:options[@"padding"]];
+    if (options[@"paddingBottom"]) {
+        _paddingBottom = [RCTConvert float:options[@"paddingBottom"]];
     } else {
-        _padding = 10.0f;
+        _paddingBottom = 10.0f;
+    }
+
+    if (options[@"paddingLeft"]) {
+        _paddingLeft = [RCTConvert float:options[@"paddingLeft"]];
+    } else {
+        _paddingLeft = 10.0f;
+    }
+
+    if (options[@"paddingTop"]) {
+        _paddingTop = [RCTConvert float:options[@"paddingTop"]];
+    } else {
+        _paddingTop = 10.0f;
+    }
+
+    if (options[@"paddingRight"]) {
+        _paddingRight = [RCTConvert float:options[@"paddingRight"]];
+    } else {
+        _paddingRight = 10.0f;
+    }
+
+    if (options[@"padding"]) {
+        _paddingTop = [RCTConvert float:options[@"padding"]];
+        _paddingBottom = [RCTConvert float:options[@"padding"]];
+        _paddingLeft = [RCTConvert float:options[@"padding"]];
+        _paddingRight = [RCTConvert float:options[@"padding"]];
     }
 
     NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -130,12 +168,13 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     // Define the printableRect and paperRect
     // If the printableRect defines the printable area of the page
     CGRect paperRect = CGRectMake(0, 0, _PDFSize.width, _PDFSize.height);
-    CGRect printableRect = CGRectMake(_padding, _padding, _PDFSize.width-(_padding * 2), _PDFSize.height-(_padding * 2));
+    CGRect printableRect = CGRectMake(_paddingTop, _paddingLeft, _PDFSize.width-(_paddingLeft + _paddingRight), _PDFSize.height-(_paddingBottom + _paddingTop));
+
 
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
     [render setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
 
-    NSData *pdfData = [render printToPDF];
+    NSData * pdfData = [render printToPDF:&_numberOfPages];
 
     if (pdfData) {
         NSString *pdfBase64 = @"";
@@ -146,6 +185,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         }
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                              pdfBase64, @"base64",
+                             [NSString stringWithFormat: @"%ld", (long)_numberOfPages], @"numberOfPages",
                              _filePath, @"filePath", nil];
         _resolveBlock(data);
     } else {

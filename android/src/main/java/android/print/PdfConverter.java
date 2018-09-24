@@ -22,6 +22,8 @@ import java.io.RandomAccessFile;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableMap;
 
+import com.tom_roush.pdfbox.pdmodel.PDDocument;
+
 /**
  * Converts HTML to PDF.
  * <p>
@@ -74,7 +76,12 @@ public class PdfConverter implements Runnable {
                                 if (mShouldEncode) {
                                     base64 = encodeFromFile(mPdfFile);
                                 }
+
+                                PDDocument myDocument = PDDocument.load(mPdfFile);
+                                int pagesToBePrinted = myDocument.getNumberOfPages();
+
                                 mResultMap.putString("filePath", mPdfFile.getAbsolutePath());
+                                mResultMap.putString("numberOfPages", String.valueOf(pagesToBePrinted));
                                 mResultMap.putString("base64", base64);
                                 mPromise.resolve(mResultMap);
                             } catch (IOException e) {
@@ -137,7 +144,7 @@ public class PdfConverter implements Runnable {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return null;
 
         return new PrintAttributes.Builder()
-                .setMediaSize(PrintAttributes.MediaSize.NA_GOVT_LETTER)
+                .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
                 .setResolution(new PrintAttributes.Resolution("RESOLUTION_ID", "RESOLUTION_ID", 600, 600))
                 .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
                 .build();
