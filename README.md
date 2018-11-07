@@ -95,6 +95,10 @@ export default class Example extends Component {
 | `directory` | `string` |default cache directory| Directory where the file will be created (`Documents` folder in example above). Please note, on iOS `Documents` is the only custom value that is accepted.
 
 
+#### Images
+
+For images use Base64 only
+
 #### iOS Only
 
 | Param | Type | Default | Note |
