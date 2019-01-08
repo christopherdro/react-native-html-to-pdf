@@ -113,3 +113,15 @@ export default class Example extends Component {
 | Param | Type | Default | Note |
 |---|---|---|---|
 | `fonts` | Array | | Allow custom fonts `['/fonts/TimesNewRoman.ttf', '/fonts/Verdana.ttf']`
+
+### Issues ( The reason to fork and pull request )
+
+```js
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':react-native-html-to-pdf:verifyReleaseResources'.
+> com.android.ide.common.process.ProcessException: Failed to execute aapt
+```
+Check the issue if you are facing same problem on release build:
+https://github.com/christopherdro/react-native-html-to-pdf/issues/98
