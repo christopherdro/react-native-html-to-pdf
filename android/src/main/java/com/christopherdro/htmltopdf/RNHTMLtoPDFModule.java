@@ -107,7 +107,7 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
   private void convertToPDF(String htmlString, File file, boolean shouldEncode, WritableMap resultMap, Promise promise,
       String baseURL,PrintAttributes printAttributes) throws Exception {
       PdfConverter pdfConverter=PdfConverter.getInstance();
-      if(printAttributes) pdfConverter.setPdfPrintAttrs(printAttributes);
+      if(printAttributes!=null) pdfConverter.setPdfPrintAttrs(printAttributes);
       pdfConverter.convert(mReactContext, htmlString, file, shouldEncode, resultMap, promise, baseURL);
   }
 
