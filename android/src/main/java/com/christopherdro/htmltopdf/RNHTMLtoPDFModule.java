@@ -22,6 +22,8 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
     private static final String DIRECTORY = "directory";
     private static final String BASE_64 = "base64";
     private static final String BASE_URL = "baseURL";
+    private static final String HEIGHT = "height";
+    private static final String WIDTH = "width";
 
     private static final String PDF_EXTENSION = ".pdf";
     private static final String PDF_PREFIX = "PDF_";
@@ -76,20 +78,35 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
         destinationFile = getTempFile(fileName);
       }
 
+      PrintAttributes pagesize=null;
+      if(options.hasKey(HEIGHT) && options.hasKey(WIDTH)) {
+        pagesize=PrintAttributes.Builder()
+                .setMediaSize(new PrintAttributes.MediaSize("custom","CUSTOM",
+                        (int)(options.getInt(WIDTH)*1000/72.0),
+                        (int)(options.getInt(HEIGHT)*1000/72.0))
+                .setResolution(new PrintAttributes.Resolution("RESOLUTION_ID", "RESOLUTION_ID", 600, 600))
+                .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
+                .build();
+      }
+
       convertToPDF(htmlString,
               destinationFile,
               options.hasKey(BASE_64) && options.getBoolean(BASE_64),
               Arguments.createMap(),
               promise,
-              options.hasKey(BASE_URL) ? options.getString(BASE_URL) : null);
+              options.hasKey(BASE_URL) ? options.getString(BASE_URL) : null,
+              pagesize
+              );
     } catch (Exception e) {
       promise.reject(e);
     }
   }
 
   private void convertToPDF(String htmlString, File file, boolean shouldEncode, WritableMap resultMap, Promise promise,
-      String baseURL) throws Exception {
-      PdfConverter.getInstance().convert(mReactContext, htmlString, file, shouldEncode, resultMap, promise, baseURL);
+      String baseURL,PrintAttributes printAttributes) throws Exception {
+      PdfConverter pdfConverter=PdfConverter.getInstance();
+      if(printAttributes) pdfConverter.setPdfPrintAttrs(printAttributes);
+      pdfConverter.convert(mReactContext, htmlString, file, shouldEncode, resultMap, promise, baseURL);
   }
 
   private File getTempFile(String fileName) throws IOException {
