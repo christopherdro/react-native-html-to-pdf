@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import android.os.Environment;
 import android.print.PdfConverter;
+import android.print.PrintAttributes;
 
 public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
