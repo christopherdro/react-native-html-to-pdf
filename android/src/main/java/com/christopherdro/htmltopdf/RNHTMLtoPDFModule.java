@@ -84,6 +84,7 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
                 .setMediaSize(new PrintAttributes.MediaSize("custom","CUSTOM",
                         (int)(options.getInt(WIDTH)*1000/72.0),
                         (int)(options.getInt(HEIGHT)*1000/72.0))
+                )
                 .setResolution(new PrintAttributes.Resolution("RESOLUTION_ID", "RESOLUTION_ID", 600, 600))
                 .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
                 .build();
