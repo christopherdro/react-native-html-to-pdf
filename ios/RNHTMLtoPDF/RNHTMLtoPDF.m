@@ -14,6 +14,7 @@
 
 @implementation UIPrintPageRenderer (PDF)
 - (NSData*) printToPDF:(NSInteger**)_numberOfPages
+                   backgroundColor:(UIColor*)_bgColor
 {
     NSMutableData *pdfData = [NSMutableData data];
     UIGraphicsBeginPDFContextToData( pdfData, self.paperRect, nil );
@@ -26,14 +27,14 @@
     {
         UIGraphicsBeginPDFPage();
 
-        UIColor *myColor = [UIColor colorWithRed: (246.0/255.0) green:(245.0/255.0) blue:(240.0/255.0) alpha:1];
+
         CGContextRef currentContext = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(currentContext, myColor.CGColor);
+        CGContextSetFillColorWithColor(currentContext, _bgColor.CGColor);
         CGContextFillRect(currentContext, self.paperRect);
 
         [self drawPageAtIndex: i inRect: bounds];
     }
-    
+
     *_numberOfPages = self.numberOfPages;
 
     UIGraphicsEndPDFContext();
@@ -48,6 +49,7 @@
     NSString *_html;
     NSString *_fileName;
     NSString *_filePath;
+    UIColor *_bgColor;
     NSInteger *_numberOfPages;
     CGSize _PDFSize;
     UIWebView *_webView;
@@ -91,6 +93,28 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _fileName = [RCTConvert NSString:options[@"fileName"]];
     } else {
         _fileName = [[NSProcessInfo processInfo] globallyUniqueString];
+    }
+
+    // Default Color
+    _bgColor = [UIColor colorWithRed: (246.0/255.0) green:(245.0/255.0) blue:(240.0/255.0) alpha:1];
+    if (options[@"bgColor"]){
+        NSString *hex = [RCTConvert NSString:options[@"bgColor"]];
+        hex = [hex uppercaseString];
+        NSString *cString = [hex stringByTrimmingCharactersInSet:
+            [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+        if ((cString.length) == 7) {
+            NSScanner *scanner = [NSScanner scannerWithString:cString];
+
+            UInt32 rgbValue = 0;
+            [scanner setScanLocation:1]; // Bypass '#' character
+            [scanner scanHexInt:&rgbValue];
+
+            _bgColor = [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+                                       green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
+                                        blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
+                                       alpha:1.0];
+        }
     }
 
     if (options[@"directory"] && [options[@"directory"] isEqualToString:@"Documents"]){
@@ -174,7 +198,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
     [render setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
 
-    NSData * pdfData = [render printToPDF:&_numberOfPages];
+    NSData * pdfData = [render printToPDF:&_numberOfPages backgroundColor:_bgColor ];
 
     if (pdfData) {
         NSString *pdfBase64 = @"";
