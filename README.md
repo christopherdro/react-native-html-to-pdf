@@ -93,14 +93,14 @@ export default class Example extends Component {
 | `fileName` | `string` | Random  | Custom Filename excluding .pdf extension
 | `base64` | `boolean` | false  | return base64 string of pdf file (not recommended)
 | `directory` | `string` |default cache directory| Directory where the file will be created (`Documents` folder in example above). Please note, on iOS `Documents` is the only custom value that is accepted.
+| `height` | number | 792  | Set document height (points)
+| `width` | number | 612  | Set document width (points)
 
 
 #### iOS Only
 
 | Param | Type | Default | Note |
 |---|---|---|---|
-| `height` | number | 792  | Set document height (points)
-| `width` | number | 612  | Set document width (points)
 | `paddingLeft` | number | 10  | Outer left padding (points)
 | `paddingRight` | number | 10  | Outer right padding (points)
 | `paddingTop` | number | 10  | Outer top padding (points)
