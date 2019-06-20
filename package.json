@@ -15,5 +15,6 @@
     "react-native"
   ],
   "author": "Christopher Dro <casheghian@gmail.com> (http://chris.si)",
+  "homepage": "https://github.com/christopherdro/react-native-html-to-pdf",
   "license": "MIT"
 }
