@@ -106,6 +106,7 @@ export default class Example extends Component {
 | `paddingTop` | number | 10  | Outer top padding (points)
 | `paddingBottom` | number | 10  | Outer bottom padding (points)
 | `padding` | number | 10 | Outer padding for any side (points), overrides any padding listed before
+| `bgColor` | string | #F6F5F0 | Background color in Hexadecimal
 
 
 #### Android Only
