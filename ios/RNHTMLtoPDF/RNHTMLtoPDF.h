@@ -3,7 +3,7 @@
 
 #import <React/RCTView.h>
 #import <React/RCTBridgeModule.h>
-
-@interface RNHTMLtoPDF : RCTView <RCTBridgeModule, UIWebViewDelegate>
+#import <WebKit/WebKit.h>
+@interface RNHTMLtoPDF : RCTView <RCTBridgeModule, WKNavigationDelegate>
 
 @end

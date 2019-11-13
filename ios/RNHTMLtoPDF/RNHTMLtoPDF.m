@@ -52,7 +52,7 @@
     UIColor *_bgColor;
     NSInteger *_numberOfPages;
     CGSize _PDFSize;
-    UIWebView *_webView;
+    WKWebView *_webView;
     float _paddingBottom;
     float _paddingTop;
     float _paddingLeft;
@@ -73,8 +73,8 @@ RCT_EXPORT_MODULE();
 - (instancetype)init
 {
     if (self = [super init]) {
-        _webView = [[UIWebView alloc] initWithFrame:self.bounds];
-        _webView.delegate = self;
+        _webView = [[WKWebView alloc] initWithFrame:self.bounds];
+        _webView.navigationDelegate = self;
         [self addSubview:_webView];
         autoHeight = false;
     }
@@ -173,44 +173,43 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
 
     NSString *path = [[NSBundle mainBundle] bundlePath];
     NSURL *baseURL = [NSURL fileURLWithPath:path];
-
-    [_webView loadHTMLString:_html baseURL:baseURL];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_webView loadHTMLString:_html baseURL:baseURL];
+    });
 
     _resolveBlock = resolve;
     _rejectBlock = reject;
 
 }
-
-- (void)webViewDidFinishLoad:(UIWebView *)awebView
-{
-    if (awebView.isLoading)
-        return;
-
+-(void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    if (webView.isLoading)
+    return;
+    
     UIPrintPageRenderer *render = [[UIPrintPageRenderer alloc] init];
-    [render addPrintFormatter:awebView.viewPrintFormatter startingAtPageAtIndex:0];
-
+    [render addPrintFormatter:webView.viewPrintFormatter startingAtPageAtIndex:0];
+    
     // Define the printableRect and paperRect
     // If the printableRect defines the printable area of the page
     CGRect paperRect = CGRectMake(0, 0, _PDFSize.width, _PDFSize.height);
     CGRect printableRect = CGRectMake(_paddingTop, _paddingLeft, _PDFSize.width-(_paddingLeft + _paddingRight), _PDFSize.height-(_paddingBottom + _paddingTop));
-
-
+    
+    
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
     [render setValue:[NSValue valueWithCGRect:printableRect] forKey:@"printableRect"];
-
+    
     NSData * pdfData = [render printToPDF:&_numberOfPages backgroundColor:_bgColor ];
-
+    
     if (pdfData) {
         NSString *pdfBase64 = @"";
-
+        
         [pdfData writeToFile:_filePath atomically:YES];
         if (_base64) {
             pdfBase64 = [pdfData base64EncodedStringWithOptions:0];
         }
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                             pdfBase64, @"base64",
-                             [NSString stringWithFormat: @"%ld", (long)_numberOfPages], @"numberOfPages",
-                             _filePath, @"filePath", nil];
+                              pdfBase64, @"base64",
+                              [NSString stringWithFormat: @"%ld", (long)_numberOfPages], @"numberOfPages",
+                              _filePath, @"filePath", nil];
         _resolveBlock(data);
     } else {
         NSError *error;
