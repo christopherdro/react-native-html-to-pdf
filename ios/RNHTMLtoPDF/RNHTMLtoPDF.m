@@ -191,7 +191,7 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
     // Define the printableRect and paperRect
     // If the printableRect defines the printable area of the page
     CGRect paperRect = CGRectMake(0, 0, _PDFSize.width, _PDFSize.height);
-    CGRect printableRect = CGRectMake(_paddingTop, _paddingLeft, _PDFSize.width-(_paddingLeft + _paddingRight), _PDFSize.height-(_paddingBottom + _paddingTop));
+    CGRect printableRect = CGRectMake(_paddingLeft, _paddingTop, _PDFSize.width-(_paddingLeft + _paddingRight), _PDFSize.height-(_paddingBottom + _paddingTop));
     
     
     [render setValue:[NSValue valueWithCGRect:paperRect] forKey:@"paperRect"];
