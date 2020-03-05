@@ -20,7 +20,6 @@ import android.util.Base64;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReactContext;
