@@ -1,51 +1,15 @@
-# react-native-html-to-pdf
+# react-native-html-to-pdf-rd
 
 Convert html strings to PDF documents using React Native
 
 ## Installation
 
-1. Run `npm install react-native-html-to-pdf --save`
+1. Run `npm install react-native-html-to-pdf-rd --save`
 
 ### Option 1: Automatic
 
 2. Run `react-native link`
 
-### Option 2: Manual
-
-#### iOS
-
-2. Open your project in XCode, right click on [Libraries](http://url.brentvatne.ca/jQp8) and select [Add Files to "Your Project Name](http://url.brentvatne.ca/1gqUD).
-3. Add `libRNHTMLtoPDF.a` to `Build Phases -> Link Binary With Libraries`
-   [(Screenshot)](http://url.brentvatne.ca/17Xfe).
-
-#### Android
-- Edit `android/settings.gradle` to included
-
-```java
-include ':react-native-html-to-pdf'
-project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDir,'../node_modules/react-native-html-to-pdf/android')
-```
-
-- Edit `android/app/build.gradle` file to include
-
-```java
-dependencies {
-  ....
-  compile project(':react-native-html-to-pdf')
-
-}
-```
-
-- Edit `MainApplication.java` to include
-
-```java
-// import the package
-import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
-
-// include package
-new MainReactPackage(),
-new RNHTMLtoPDFPackage()
-```
 
 - Add the following `WRITE_EXTERNAL_STORAGE` permission to `AndroidManifest.xml`
 
@@ -66,7 +30,7 @@ import {
   View,
 } from 'react-native';
 
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
+import RNHTMLtoPDF from 'react-native-html-to-pdf-rd';
 
 export default class Example extends Component {
   async createPDF() {
