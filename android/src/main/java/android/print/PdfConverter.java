@@ -96,7 +96,8 @@ public class PdfConverter implements Runnable {
         });
         WebSettings settings = mWebView.getSettings();
         settings.setDefaultTextEncodingName("utf-8");
-        mWebView.loadData(mHtmlString, "text/HTML; charset=utf-8", null);
+       mWebView.loadDataWithBaseURL(mBaseURL, mHtmlString, "text/HTML", "utf-8", null);
+
     }
 
     public PrintAttributes getPdfPrintAttrs() {
