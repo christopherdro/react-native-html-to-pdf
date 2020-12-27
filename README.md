@@ -40,7 +40,7 @@ dependencies {
 
 ```java
 // import the package
-import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
+import com.onibenjo.htmltopdf.RNHTMLtoPDFPackage;
 
 // include package
 new MainReactPackage(),

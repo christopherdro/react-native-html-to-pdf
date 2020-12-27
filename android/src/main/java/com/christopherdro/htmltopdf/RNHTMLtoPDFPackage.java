@@ -1,4 +1,4 @@
-package com.christopherdro.htmltopdf;
+package com.onibenjo.htmltopdf;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

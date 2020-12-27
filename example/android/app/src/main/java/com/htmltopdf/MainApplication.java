@@ -13,7 +13,7 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
+import com.onibenjo.htmltopdf.RNHTMLtoPDFPackage;
 
 
 public class MainApplication extends Application implements ReactApplication {
