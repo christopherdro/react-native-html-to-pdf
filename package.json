@@ -1,6 +1,6 @@
 {
   "name": "rn-html-to-pdf",
-  "version": "0.8.0",
+  "version": "0.1.0",
   "scripts": {
     "start": "node_modules/react-native/packager/packager.sh"
   },

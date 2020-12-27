@@ -2,5 +2,5 @@ rootProject.name = 'HTMLToPDF'
 
 include ':app'
 
-include ':react-native-html-to-pdf'
-project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDir,'../node_modules/react-native-html-to-pdf/android')
+include ':rn-html-to-pdf'
+project(':rn-html-to-pdf').projectDir = new File(rootProject.projectDir,'../node_modules/rn-html-to-pdf/android')
