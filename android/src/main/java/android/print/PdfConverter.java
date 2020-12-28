@@ -5,6 +5,7 @@
 
 package android.print;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
@@ -12,9 +13,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceError;
-
+import android.webkit.WebSettings;
 import java.io.File;
 import android.util.Base64;
 import java.io.IOException;
@@ -22,7 +21,6 @@ import java.io.RandomAccessFile;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.ReactContext;
 
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 
@@ -37,7 +35,7 @@ public class PdfConverter implements Runnable {
     private static final String TAG = "PdfConverter";
     private static PdfConverter sInstance;
 
-    private ReactContext mContext;
+    private Context mContext;
     private String mHtmlString;
     private File mPdfFile;
     private PrintAttributes mPdfPrintAttrs;
@@ -47,7 +45,6 @@ public class PdfConverter implements Runnable {
     private WritableMap mResultMap;
     private Promise mPromise;
     private String mBaseURL;
-    private String EVENT_NAME = "onPdfStage";
 
     private PdfConverter() {
     }
@@ -59,67 +56,47 @@ public class PdfConverter implements Runnable {
         return sInstance;
     }
 
-    /*private void sendEvent(
-        WritableMap params
-    ) {
-        mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(
-            EVENT_NAME,
-            params
-        );
-    }*/
-
     @Override
     public void run() {
-        try {
-            mWebView = new WebView(mContext);
-            mWebView.setWebViewClient(new WebViewClient() {
-                @Override
-                public void onReceivedError (WebView view, int errorCode, String description, String failingUrl) {
-                    mPromise.reject(description);
-                }
-                @Override
-                public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                    mPromise.reject(error.toString());
-                }
-                @Override
-                public void onPageFinished(WebView view, String url) {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
-                        throw new RuntimeException("call requires API level 19");
-                    else {
-                        PrintDocumentAdapter documentAdapter = mWebView.createPrintDocumentAdapter();
-                        documentAdapter.onLayout(null, getPdfPrintAttrs(), null, new PrintDocumentAdapter.LayoutResultCallback() {
-                        }, null);
-                        documentAdapter.onWrite(new PageRange[]{PageRange.ALL_PAGES}, getOutputFileDescriptor(), null, new PrintDocumentAdapter.WriteResultCallback() {
-                            @Override
-                            public void onWriteFinished(PageRange[] pages) {
-                                try {
-                                    String base64 = "";
-                                    if (mShouldEncode) {
-                                        base64 = encodeFromFile(mPdfFile);
-                                    }
-
-                                    PDDocument myDocument = PDDocument.load(mPdfFile);
-                                    int pagesToBePrinted = myDocument.getNumberOfPages();
-
-                                    mResultMap.putString("filePath", mPdfFile.getAbsolutePath());
-                                    mResultMap.putString("numberOfPages", String.valueOf(pagesToBePrinted));
-                                    mResultMap.putString("base64", base64);
-                                    mPromise.resolve(mResultMap);
-                                } catch (IOException e) {
-                                    mPromise.reject(e.getMessage());
-                                } finally {
-                                    destroy();
+        mWebView = new WebView(mContext);
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT)
+                    throw new RuntimeException("call requires API level 19");
+                else {
+                    PrintDocumentAdapter documentAdapter = mWebView.createPrintDocumentAdapter();
+                    documentAdapter.onLayout(null, getPdfPrintAttrs(), null, new PrintDocumentAdapter.LayoutResultCallback() {
+                    }, null);
+                    documentAdapter.onWrite(new PageRange[]{PageRange.ALL_PAGES}, getOutputFileDescriptor(), null, new PrintDocumentAdapter.WriteResultCallback() {
+                        @Override
+                        public void onWriteFinished(PageRange[] pages) {
+                            try {
+                                String base64 = "";
+                                if (mShouldEncode) {
+                                    base64 = encodeFromFile(mPdfFile);
                                 }
+
+                                PDDocument myDocument = PDDocument.load(mPdfFile);
+                                int pagesToBePrinted = myDocument.getNumberOfPages();
+
+                                mResultMap.putString("filePath", mPdfFile.getAbsolutePath());
+                                mResultMap.putString("numberOfPages", String.valueOf(pagesToBePrinted));
+                                mResultMap.putString("base64", base64);
+                                mPromise.resolve(mResultMap);
+                            } catch (IOException e) {
+                                mPromise.reject(e.getMessage());
+                            } finally {
+                                destroy();
                             }
-                        });
-                    }
+                        }
+                    });
                 }
-            });
-            mWebView.loadDataWithBaseURL(null, mHtmlString, "text/HTML", "utf-8", null);
-        }
-        catch (Exception e) {
-            mPromise.reject(e);
-        }
+            }
+        });
+        WebSettings settings = mWebView.getSettings();
+        settings.setDefaultTextEncodingName("utf-8");
+        mWebView.loadDataWithBaseURL(mBaseURL, mHtmlString, "text/HTML", "utf-8", null);
     }
 
     public PrintAttributes getPdfPrintAttrs() {
@@ -130,7 +107,7 @@ public class PdfConverter implements Runnable {
         this.mPdfPrintAttrs = printAttrs;
     }
 
-    public void convert(ReactContext context, String htmlString, File file, boolean shouldEncode, WritableMap resultMap,
+    public void convert(Context context, String htmlString, File file, boolean shouldEncode, WritableMap resultMap,
             Promise promise, String baseURL) throws Exception {
         if (context == null)
             throw new Exception("context can't be null");
@@ -140,7 +117,7 @@ public class PdfConverter implements Runnable {
             throw new Exception("file can't be null");
 
         if (mIsCurrentlyConverting)
-            throw new Exception("Is Currently Converting");
+            return;
 
         mContext = context;
         mHtmlString = htmlString;
