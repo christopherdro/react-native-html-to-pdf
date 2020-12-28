@@ -1,10 +1,10 @@
 
 buildscript {
      rootProject.ext {
-        buildToolsVersion = "29.0.2"
+        // buildToolsVersion = "29.0.2"
         minSdkVersion = 16
-        compileSdkVersion = 29
-        targetSdkVersion = 29
+        // compileSdkVersion = 29
+        // targetSdkVersion = 29
     }
     repositories {
         google()
@@ -22,18 +22,26 @@ buildscript {
 
 apply plugin: 'com.android.library'
 
+def getExtOrDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['FileAccess_' + name]
+}
+
+def getExtOrIntegerDefault(name) {
+  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['FileAccess_' + name]).toInteger()
+}
+
 android {
-     compileSdkVersion rootProject.ext.compileSdkVersion
+     compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
      compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    compileSdkVersion rootProject.ext.compileSdkVersion
-
+    compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
+    buildToolsVersion getExtOrDefault('buildToolsVersion')
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
         versionCode 1
         versionName "1.0"
         ndk {
