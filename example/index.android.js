@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-import RNHTMLtoPDF from 'rn-html-to-pdf';
+import RNHTMLtoPDF from 'react-native-html-to-pdf-lite';
 
 export default class HTMLToPDF extends Component {
 
