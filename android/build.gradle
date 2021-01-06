@@ -1,11 +1,5 @@
 
 buildscript {
-     rootProject.ext {
-        // buildToolsVersion = "29.0.2"
-        minSdkVersion = 16
-        // compileSdkVersion = 29
-        // targetSdkVersion = 29
-    }
     repositories {
         google()
         jcenter()
@@ -19,6 +13,9 @@ buildscript {
     }
 }
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
 
 apply plugin: 'com.android.library'
 
@@ -36,11 +33,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
-    buildToolsVersion getExtOrDefault('buildToolsVersion')
+    // buildToolsVersion getExtOrDefault('buildToolsVersion')
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion getExtOrIntegerDefault('minSdkVersion')
         targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
         versionCode 1
         versionName "1.0"
