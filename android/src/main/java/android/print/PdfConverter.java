@@ -91,6 +91,22 @@ public class PdfConverter implements Runnable {
                                 destroy();
                             }
                         }
+
+                        @Override
+                        public void onWriteFailed(CharSequence error) {
+                            String errorResult = "Please retry, Error occurred generating the pdf";
+                            if (error != null) {
+                                errorResult = error.toString();
+                            }
+                            mPromise.reject(errorResult);
+                            destroy();
+                        }
+
+                        @Override
+                        public void onWriteCancelled() {
+                            destroy();
+                        }
+
                     });
                 }
             }
