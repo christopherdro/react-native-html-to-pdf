@@ -15,7 +15,6 @@ import java.util.UUID;
 import android.os.Environment;
 import android.print.PdfConverter;
 import android.print.PrintAttributes;
-import android.os.Build;
 
 public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
 
@@ -66,7 +65,7 @@ public class RNHTMLtoPDFModule extends ReactContextBaseJavaModule {
       if (options.hasKey(DIRECTORY)) {
         String state = Environment.getExternalStorageState();
         File path = (Environment.MEDIA_MOUNTED.equals(state)) ?
-          new File(Build.VERSION.SDK_INT >= 30 ? mReactContext.getExternalFilesDir(null):Environment.getExternalStorageDirectory(), options.getString(DIRECTORY)) :
+          new File(mReactContext.getExternalFilesDir(null), options.getString(DIRECTORY)) :
           new File(mReactContext.getFilesDir(), options.getString(DIRECTORY));
 
         if (!path.exists()) {
