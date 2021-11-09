@@ -46,9 +46,23 @@ Carthage/Build
 #
 node_modules/
 npm-debug.log
+yarn-error.log
 
 # Android/IJ
 .idea
 .gradle
 android/**/*.iml
 local.properties
+*.hprof
+
+
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+	
+# Bundle artifact
+*.jsbundle
+
+# CocoaPods
+/ios/Pods/
+/example/ios/Pods/
