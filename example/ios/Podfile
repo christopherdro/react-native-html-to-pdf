@@ -12,6 +12,8 @@ target 'HTMLToPDF' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-html-to-pdf', :path => '../..'
+
   target 'HTMLToPDFTests' do
     inherit! :complete
     # Pods for testing

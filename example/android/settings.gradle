@@ -3,3 +3,7 @@ rootProject.name = 'HTMLToPDF'
 
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
+
+
+include ':react-native-html-to-pdf'
+project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDir, '../../android')
