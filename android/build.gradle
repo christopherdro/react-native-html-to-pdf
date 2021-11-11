@@ -2,8 +2,9 @@
 buildscript {
     repositories {
         google()
-        jcenter()
-        maven { url "https://jitpack.io" }
+        // jcenter()
+        // maven { url "https://jitpack.io" }
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.1'
@@ -51,7 +52,7 @@ repositories {
 
 
 dependencies {
-    // implementation 'com.tom_roush:pdfbox-android:1.8.10.1'
+    // implementation 'com.tom-roush:pdfbox-android:1.8.10.3'
     implementation 'com.github.tripplemac:pdfbox-android-lite:master'
     implementation 'com.facebook.react:react-native:+'
 }
