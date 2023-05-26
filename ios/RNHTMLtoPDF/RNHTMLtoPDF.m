@@ -74,9 +74,6 @@ RCT_EXPORT_MODULE();
 {
     if (self = [super init]) {
         _webView = [[WKWebView alloc] initWithFrame:self.bounds];
-        if (@available(iOS 16.4, *)) {
-          _webView.configuration.preferences.shouldPrintBackgrounds = true;
-        }
         _webView.navigationDelegate = self;
         [self addSubview:_webView];
         autoHeight = false;
