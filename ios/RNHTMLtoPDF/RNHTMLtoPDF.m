@@ -74,6 +74,9 @@ RCT_EXPORT_MODULE();
 {
     if (self = [super init]) {
         _webView = [[WKWebView alloc] initWithFrame:self.bounds];
+        if (@available(iOS 16.4, *)) {
+          _webView.configuration.preferences.shouldPrintBackgrounds = true;
+        }
         _webView.navigationDelegate = self;
         [self addSubview:_webView];
         autoHeight = false;
@@ -169,6 +172,12 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _paddingBottom = [RCTConvert float:options[@"padding"]];
         _paddingLeft = [RCTConvert float:options[@"padding"]];
         _paddingRight = [RCTConvert float:options[@"padding"]];
+    }
+    
+    if (@available(iOS 16.4, *)) {
+      if (options[@"backgroundGraphics"]) {
+        _webView.configuration.preferences.shouldPrintBackgrounds = [options[@"backgroundGraphics"] boolValue];
+      }
     }
 
     NSString *path = [[NSBundle mainBundle] bundlePath];
