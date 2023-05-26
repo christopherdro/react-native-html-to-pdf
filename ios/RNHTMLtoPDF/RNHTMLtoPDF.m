@@ -170,6 +170,12 @@ RCT_EXPORT_METHOD(convert:(NSDictionary *)options
         _paddingLeft = [RCTConvert float:options[@"padding"]];
         _paddingRight = [RCTConvert float:options[@"padding"]];
     }
+    
+    if (@available(iOS 16.4, *)) {
+      if (options[@"backgroundGraphics"]) {
+        _webView.configuration.preferences.shouldPrintBackgrounds = [options[@"backgroundGraphics"] boolValue];
+      }
+    }
 
     NSString *path = [[NSBundle mainBundle] bundlePath];
     NSURL *baseURL = [NSURL fileURLWithPath:path];
