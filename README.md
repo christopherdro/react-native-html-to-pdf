@@ -18,7 +18,7 @@ Convert html strings to PDF documents using React Native
 3. Add `libRNHTMLtoPDF.a` to `Build Phases -> Link Binary With Libraries`
    [(Screenshot)](http://url.brentvatne.ca/17Xfe).
 
-#### Android
+#### Android - Kotlin
 - Edit `android/settings.gradle` to included
 
 ```java
@@ -31,20 +31,22 @@ project(':react-native-html-to-pdf').projectDir = new File(rootProject.projectDi
 ```java
 dependencies {
   ....
-  compile project(':react-native-html-to-pdf')
+  implementation project(':react-native-html-to-pdf') // Add this line
 
 }
 ```
 
-- Edit `MainApplication.java` to include
+- Edit `MainApplication.kt` to include
 
 ```java
 // import the package
-import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
+import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage
 
+// It is no longer necessary to manually include the packages below, as React Native now includes them automatically.
 // include package
-new MainReactPackage(),
-new RNHTMLtoPDFPackage()
+// add(MainReactPackage()),
+// add(RNHTMLtoPDFPackage())
+// If you include it, you will see an error occur because the package will be initialized twice.
 ```
 
 - Add the following `WRITE_EXTERNAL_STORAGE` permission to `AndroidManifest.xml`
