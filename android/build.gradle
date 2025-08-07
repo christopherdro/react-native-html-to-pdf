@@ -19,6 +19,13 @@ def safeExtGet(prop, fallback) {
 apply plugin: 'com.android.library'
 
 android {
+    def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+    if (agpVersion >= 7) {
+      namespace 'com.christopherdro.htmltopdf'
+    }
+    buildFeatures {
+            buildConfig true
+    }
      compileSdkVersion safeExtGet('compileSdkVersion', 28)
      compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
