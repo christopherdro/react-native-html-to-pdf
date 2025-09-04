@@ -156,6 +156,7 @@ class PdfConverter private constructor() : Runnable {
                         textZoom = 100
                         defaultTextEncodingName = "utf-8"
                         allowFileAccess = true
+                        javaScriptEnabled = true
                     }
 
                     mHtmlString?.let { html ->
